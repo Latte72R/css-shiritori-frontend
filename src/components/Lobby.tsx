@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useGame } from '../contexts/GameContext';
+import type React from "react";
+import { useState } from "react";
+import { useGame } from "../contexts/GameContext";
 
 const Lobby: React.FC = () => {
   const { joinRoom, lastError } = useGame();
-  const [roomCode, setRoomCode] = useState('');
-  const [name, setName] = useState('');
+  const [roomCode, setRoomCode] = useState("");
+  const [name, setName] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -18,7 +19,12 @@ const Lobby: React.FC = () => {
       <h1 className="text-3xl font-bold text-center mb-6">CSS Shiritori</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">Your Name</label>
+          <label
+            htmlFor="name"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Your Name
+          </label>
           <input
             id="name"
             type="text"
@@ -30,7 +36,12 @@ const Lobby: React.FC = () => {
           />
         </div>
         <div>
-          <label htmlFor="roomCode" className="block text-sm font-medium text-gray-700">Room Code</label>
+          <label
+            htmlFor="roomCode"
+            className="block text-sm font-medium text-gray-700"
+          >
+            Room Code
+          </label>
           <input
             id="roomCode"
             type="text"
@@ -49,7 +60,9 @@ const Lobby: React.FC = () => {
           Join / Create Room
         </button>
       </form>
-      {lastError && <p className="mt-4 text-center text-red-500">Error: {lastError}</p>}
+      {lastError && (
+        <p className="mt-4 text-center text-red-500">Error: {lastError}</p>
+      )}
     </div>
   );
 };

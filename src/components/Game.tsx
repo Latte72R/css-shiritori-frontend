@@ -1,17 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { useGame } from '../contexts/GameContext';
-import { BACKEND_URL } from '../contexts/SocketContext';
+import type React from "react";
+import { useGame } from "../contexts/GameContext";
+import { BACKEND_URL } from "../contexts/SocketContext";
 
 const Game: React.FC = () => {
-  const { prompt, submitCss, timer, currentTurn } = useGame();
-  const [css, setCss] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-
-  useEffect(() => {
-    // Reset local state when a new prompt arrives
-    setCss('');
-    setSubmitted(false);
-  }, [prompt]);
+  const { prompt, css, submitted, setCss, submitCss, timer, currentTurn } =
+    useGame();
 
   if (!prompt) {
     return <div>Loading game...</div>;
@@ -25,8 +18,7 @@ const Game: React.FC = () => {
   `;
 
   const handleSubmit = () => {
-    submitCss(css);
-    setSubmitted(true);
+    submitCss();
   };
 
   return (
@@ -34,8 +26,16 @@ const Game: React.FC = () => {
       <header className="flex-shrink-0 flex justify-between items-center">
         <h1 className="text-2xl font-bold">Replicate the Target!</h1>
         <div className="text-right">
-          {currentTurn && <div className="text-lg font-semibold">Turn: {currentTurn.number} / {currentTurn.total}</div>}
-          {timer !== null && <div className="text-xl font-mono bg-red-500 text-white px-3 py-1 rounded">Time: {timer}s</div>}
+          {currentTurn && (
+            <div className="text-lg font-semibold">
+              Turn: {currentTurn.number} / {currentTurn.total}
+            </div>
+          )}
+          {timer !== null && (
+            <div className="text-xl font-mono bg-red-500 text-white px-3 py-1 rounded">
+              Time: {timer}s
+            </div>
+          )}
         </div>
       </header>
 
@@ -44,7 +44,11 @@ const Game: React.FC = () => {
         <div className="bg-white rounded-lg shadow p-4 flex flex-col">
           <h2 className="text-lg font-semibold mb-2">Target</h2>
           <div className="flex-grow flex items-center justify-center bg-gray-200 rounded">
-            <img src={`${BACKEND_URL}${prompt.targetImageUrl}`} alt="Target screenshot" className="max-w-full max-h-full object-contain" />
+            <img
+              src={`${BACKEND_URL}${prompt.targetImageUrl}`}
+              alt="Target screenshot"
+              className="max-w-full max-h-full object-contain"
+            />
           </div>
         </div>
 
@@ -84,11 +88,12 @@ const Game: React.FC = () => {
 
       <footer className="flex-shrink-0 text-center">
         <button
+          type="button"
           onClick={handleSubmit}
           disabled={submitted}
           className="w-1/2 py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          {submitted ? 'Waiting for others...' : 'Submit CSS'}
+          {submitted ? "Waiting for others..." : "Submit CSS"}
         </button>
       </footer>
     </div>
