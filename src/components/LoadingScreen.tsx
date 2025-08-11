@@ -7,7 +7,7 @@ type CssTip = {
   example?: string;
 };
 
-const CSS_TIPS: CssTip[] = [
+const BASE_TIPS: CssTip[] = [
   { property: "color", description: "テキストの色を指定します。", example: "p { color: #333; }" },
   { property: "background-color", description: "要素の背景色を指定します。", example: "div { background-color: #f5f5f5; }" },
   { property: "font-size", description: "フォントサイズを指定します。", example: "h1 { font-size: 2rem; }" },
@@ -21,14 +21,14 @@ const CSS_TIPS: CssTip[] = [
   { property: "white-space", description: "空白や改行の扱いを指定します。", example: ".code { white-space: pre; }" },
   { property: "word-break", description: "単語の折り返し方法を指定します。", example: ".wrap { word-break: break-all; }" },
   { property: "overflow", description: "はみ出しコンテンツの表示方法を制御します。", example: ".box { overflow: hidden; }" },
-  { property: "overflow-x", description: "横方向のはみ出しを制御します。" },
-  { property: "overflow-y", description: "縦方向のはみ出しを制御します。" },
+  { property: "overflow-x", description: "横方向のはみ出しを制御します。", example: ".row { overflow-x: auto; }" },
+  { property: "overflow-y", description: "縦方向のはみ出しを制御します。", example: ".col { overflow-y: scroll; }" },
   { property: "display", description: "要素の表示形式を指定します。", example: ".flex { display: flex; }" },
-  { property: "position", description: "配置方法を指定します(static, relative, absolute, fixed, sticky)。" },
-  { property: "top/right/bottom/left", description: "位置指定プロパティ。positionと併用します。" },
-  { property: "z-index", description: "要素の重なり順序を指定します(位置指定要素に有効)。" },
-  { property: "float", description: "要素を左右に回り込ませます(レガシー)。" },
-  { property: "clear", description: "回り込みを解除する位置を指定します。" },
+  { property: "position", description: "配置方法を指定します(static, relative, absolute, fixed, sticky)。", example: ".badge { position: absolute; top: 8px; right: 8px; }" },
+  { property: "top/right/bottom/left", description: "位置指定プロパティ。positionと併用します。", example: ".box { position: relative; left: 10px; }" },
+  { property: "z-index", description: "要素の重なり順序を指定します(位置指定要素に有効)。", example: ".modal { z-index: 1000; }" },
+  { property: "float", description: "要素を左右に回り込ませます(レガシー)。", example: ".img { float: right; }" },
+  { property: "clear", description: "回り込みを解除する位置を指定します。", example: ".clearfix { clear: both; }" },
   { property: "margin", description: "外側の余白を指定します。", example: ".card { margin: 16px; }" },
   { property: "padding", description: "内側の余白を指定します。", example: ".card { padding: 16px; }" },
   { property: "border", description: "境界線を一括指定します。", example: ".panel { border: 1px solid #ddd; }" },
@@ -36,49 +36,73 @@ const CSS_TIPS: CssTip[] = [
   { property: "box-shadow", description: "要素に影を付けます。", example: ".modal { box-shadow: 0 10px 30px rgba(0,0,0,.2); }" },
   { property: "opacity", description: "不透明度を設定します(0〜1)。", example: ".dim { opacity: .6; }" },
   { property: "width", description: "要素の幅を指定します。", example: ".img { width: 200px; }" },
-  { property: "min-width", description: "最小幅を指定します。" },
-  { property: "max-width", description: "最大幅を指定します。" },
-  { property: "height", description: "要素の高さを指定します。" },
-  { property: "min-height", description: "最小高さを指定します。" },
-  { property: "max-height", description: "最大高さを指定します。" },
+  { property: "min-width", description: "最小幅を指定します。", example: ".img { min-width: 120px; }" },
+  { property: "max-width", description: "最大幅を指定します。", example: ".img { max-width: 100%; }" },
+  { property: "height", description: "要素の高さを指定します。", example: ".hero { height: 320px; }" },
+  { property: "min-height", description: "最小高さを指定します。", example: ".box { min-height: 48px; }" },
+  { property: "max-height", description: "最大高さを指定します。", example: ".box { max-height: 70vh; }" },
   { property: "object-fit", description: "置換要素の内容の収まり方を制御します。", example: "img { object-fit: cover; }" },
   { property: "background-image", description: "背景画像を指定します。", example: "body { background-image: url(bg.png); }" },
   { property: "background-size", description: "背景画像のサイズを指定します。", example: "body { background-size: cover; }" },
-  { property: "background-position", description: "背景画像の位置を指定します。" },
-  { property: "background-repeat", description: "背景画像の繰り返しを制御します。" },
+  { property: "background-position", description: "背景画像の位置を指定します。", example: "body { background-position: center top; }" },
+  { property: "background-repeat", description: "背景画像の繰り返しを制御します。", example: "body { background-repeat: no-repeat; }" },
   { property: "list-style", description: "リストのマーカーを一括指定します。", example: "ul { list-style: square; }" },
   { property: "cursor", description: "ホバー中のカーソル形状を指定します。", example: ".btn { cursor: pointer; }" },
   { property: "transition", description: "プロパティの変化にアニメーションを加えます。", example: ".btn { transition: transform .2s; }" },
   { property: "transform", description: "要素を変形します(translate/scale/rotate等)。", example: ".box { transform: rotate(10deg); }" },
   { property: "filter", description: "ぼかしや色調などの視覚効果を適用します。", example: "img { filter: grayscale(100%); }" },
-  { property: "mix-blend-mode", description: "背景との合成方法を指定します。" },
-  { property: "isolation", description: "新しい積層コンテキストを作成します。" },
+  { property: "mix-blend-mode", description: "背景との合成方法を指定します。", example: ".fx { mix-blend-mode: multiply; }" },
+  { property: "isolation", description: "新しい積層コンテキストを作成します。", example: ".layer { isolation: isolate; }" },
   { property: "flex", description: "flexアイテムの伸縮を一括指定します。", example: ".item { flex: 1; }" },
-  { property: "flex-direction", description: "主軸方向(row/column)を指定します。" },
-  { property: "justify-content", description: "主軸方向の揃え方を指定します。" },
-  { property: "align-items", description: "交差軸方向の揃え方を指定します。" },
-  { property: "gap", description: "Flex/Gridの要素間の間隔を指定します。" },
+  { property: "flex-direction", description: "主軸方向(row/column)を指定します。", example: ".stack { display:flex; flex-direction: column; }" },
+  { property: "justify-content", description: "主軸方向の揃え方を指定します。", example: ".center { display:flex; justify-content: center; }" },
+  { property: "align-items", description: "交差軸方向の揃え方を指定します。", example: ".center { display:flex; align-items: center; }" },
+  { property: "gap", description: "Flex/Gridの要素間の間隔を指定します。", example: ".grid { display:grid; gap: 12px; }" },
   { property: "grid-template-columns", description: "Gridの列定義を指定します。", example: ".g { grid-template-columns: repeat(3, 1fr); }" },
-  { property: "grid-template-rows", description: "Gridの行定義を指定します。" },
-  { property: "grid-column", description: "アイテムの列方向の配置を指定します。" },
-  { property: "grid-row", description: "アイテムの行方向の配置を指定します。" },
-  { property: "place-items", description: "align-itemsとjustify-itemsの一括指定。" },
-  { property: "object-position", description: "置換要素の表示位置を指定します。" },
-  { property: "visibility", description: "表示・非表示(レイアウト保持)を制御します。" },
-  { property: "pointer-events", description: "ポインターの反応可否を制御します。" },
+  { property: "grid-template-rows", description: "Gridの行定義を指定します。", example: ".g { display:grid; grid-template-rows: 60px auto; }" },
+  { property: "grid-column", description: "アイテムの列方向の配置を指定します。", example: ".it { grid-column: 1 / 3; }" },
+  { property: "grid-row", description: "アイテムの行方向の配置を指定します。", example: ".it { grid-row: 2 / 4; }" },
+  { property: "place-items", description: "align-itemsとjustify-itemsの一括指定。", example: ".g { place-items: center; }" },
+  { property: "object-position", description: "置換要素の表示位置を指定します。", example: "img { object-position: left top; }" },
+  { property: "visibility", description: "表示・非表示(レイアウト保持)を制御します。", example: ".hidden { visibility: hidden; }" },
+  { property: "pointer-events", description: "ポインターの反応可否を制御します。", example: ".ghost { pointer-events: none; }" },
   { property: "aspect-ratio", description: "要素の縦横比を指定します。", example: ".thumb { aspect-ratio: 16 / 9; }" },
   { property: "content", description: "疑似要素の内容を指定します。", example: "::before { content: '★'; }" },
-  { property: "outline", description: "アウトライン(重ならない枠)を指定します。" },
-  { property: "backdrop-filter", description: "要素背後にフィルタ効果を適用します。" },
+  { property: "outline", description: "アウトライン(重ならない枠)を指定します。", example: ".focus { outline: 2px solid #4f46e5; }" },
+  { property: "backdrop-filter", description: "要素背後にフィルタ効果を適用します。", example: ".glass { backdrop-filter: blur(6px); }" },
   { property: "clip-path", description: "要素の表示領域を切り抜きます。", example: ".badge { clip-path: circle(50%); }" },
-  { property: "mask-image", description: "マスク画像で表示領域を制御します。" },
-  { property: "object-view-box", description: "置換要素の表示領域(実験的)。" },
+  { property: "mask-image", description: "マスク画像で表示領域を制御します。", example: ".mask { mask-image: linear-gradient(#000, transparent); }" },
+  { property: "object-view-box", description: "置換要素の表示領域(実験的)。", example: "img { object-view-box: inset(10% 10%); }" },
   { property: "scroll-behavior", description: "スクロール挙動をスムーズにします。", example: "html { scroll-behavior: smooth; }" },
-  { property: "user-select", description: "テキスト選択の可否を制御します。" },
-  { property: "writing-mode", description: "縦書き/横書きを指定します。" },
+  { property: "user-select", description: "テキスト選択の可否を制御します。", example: ".no-select { user-select: none; }" },
+  { property: "writing-mode", description: "縦書き/横書きを指定します。", example: ".v { writing-mode: vertical-rl; }" },
 ];
 
 const pickRandom = <T,>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
+
+// ヒントを倍増：各プロパティについて別例を自動生成
+const alternateExample = (base: string, property: string): string => {
+  let out = base
+    .replace(/(\d+)(px|rem|em|%|vh|vw)?/g, (_m, n, u = "") => `${Number(n) + 1}${u}`)
+    .replace(/#[0-9a-fA-F]{3,6}/g, (hex) => (hex.toLowerCase() === "#333" ? "#555" : "#3366cc"));
+  if (out === base) {
+    out += `\n.alt { ${property}: initial; }`;
+  }
+  return out;
+};
+
+const ensureExample = (t: CssTip): CssTip =>
+  t.example ? t : { ...t, example: `.${t.property.replace(/[^a-z-]/gi, "")} { ${t.property}: inherit; }` };
+
+const CSS_TIPS: CssTip[] = (() => {
+  const normalized = BASE_TIPS.map(ensureExample);
+  const duplicated = normalized.map((t) => ({
+    property: t.property,
+    description: t.description,
+    example: alternateExample(t.example!, t.property),
+  }));
+  return [...normalized, ...duplicated];
+})();
 
 export const LoadingScreen: React.FC<{ title?: string } & React.HTMLAttributes<HTMLDivElement>> = ({
   title,
@@ -106,7 +130,7 @@ export const LoadingGate: React.FC<{
   minDurationMs?: number;
   title?: string;
   children: React.ReactNode;
-}> = ({ ready, minDurationMs = 3000, title, children }) => {
+}> = ({ ready, minDurationMs = 5000, title, children }) => {
   const [minElapsed, setMinElapsed] = useState(false);
   const started = useRef(false);
 
@@ -127,5 +151,29 @@ export const LoadingGate: React.FC<{
   return <>{children}</>;
 };
 
-export default LoadingScreen;
+export const TipRotator: React.FC<{
+  intervalMs?: number;
+  title?: string;
+  className?: string;
+}> = ({ intervalMs = 5000, title = "CSS TIP", className = "" }) => {
+  const [index, setIndex] = useState(() => Math.floor(Math.random() * CSS_TIPS.length));
+  useEffect(() => {
+    const t = setInterval(() => setIndex((i) => (i + 1) % CSS_TIPS.length), intervalMs);
+    return () => clearInterval(t);
+  }, [intervalMs]);
+  const tip = CSS_TIPS[index];
+  return (
+    <div className={`w-full flex flex-col items-center ${className}`}>
+      <div className="text-sm text-gray-500 mb-1">{title}</div>
+      <div className="w-full max-w-xl bg-white rounded-lg shadow p-4 text-left">
+        <div className="text-lg font-semibold">{tip.property}</div>
+        <p className="text-gray-700 mt-1">{tip.description}</p>
+        {tip.example && (
+          <pre className="mt-3 bg-gray-900 text-gray-100 text-sm p-3 rounded overflow-auto"><code>{tip.example}</code></pre>
+        )}
+      </div>
+    </div>
+  );
+};
 
+export default LoadingScreen;

@@ -179,6 +179,11 @@ export interface ClientToServerEvents {
   ) => void;
 
   /**
+   * 提出済みのCSSを取り消します（サーバーがサポートしている場合）。
+   */
+  cancelSubmit?: () => void;
+
+  /**
    * 結果鑑賞画面で、ホストが「次へ」ボタンを押したことをサーバーに通知します。
    */
   nextResultStep: () => void;

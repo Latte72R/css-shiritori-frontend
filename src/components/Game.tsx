@@ -1,10 +1,10 @@
 import type React from "react";
 import { useGame } from "../contexts/GameContext";
 import { BACKEND_URL } from "../contexts/SocketContext";
-import { LoadingGate } from "./LoadingScreen";
+import { LoadingGate, TipRotator } from "./LoadingScreen";
 
 const Game: React.FC = () => {
-  const { prompt, css, submitted, setCss, submitCss, timer, currentTurn } =
+  const { prompt, css, submitted, setCss, submitCss, cancelSubmit, timer, currentTurn } =
     useGame();
 
   const srcDoc = prompt
@@ -74,28 +74,44 @@ const Game: React.FC = () => {
           </pre>
         </div>
 
-        {/* CSS Editor */}
-        <div className="bg-white rounded-lg shadow p-4 flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Your CSS</h2>
-          <textarea
-            value={css}
-            onChange={(e) => setCss(e.target.value)}
-            className="flex-grow w-full p-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-indigo-500"
-            placeholder="body { background-color: #...; }"
-            disabled={submitted}
-          />
-        </div>
+        {/* CSS Editor or Post-submit Tips */}
+        {!submitted ? (
+          <div className="bg-white rounded-lg shadow p-4 flex flex-col">
+            <h2 className="text-lg font-semibold mb-2">Your CSS</h2>
+            <textarea
+              value={css}
+              onChange={(e) => setCss(e.target.value)}
+              className="flex-grow w-full p-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-indigo-500"
+              placeholder="body { background-color: #...; }"
+            />
+          </div>
+        ) : (
+          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-stretch">
+            <h2 className="text-lg font-semibold mb-2">Submitted — Tips</h2>
+            <TipRotator title="CSS TIPS (5秒ごとに更新)" />
+            <button
+              type="button"
+              onClick={cancelSubmit}
+              className="mt-4 py-2 px-4 rounded-md text-white bg-orange-600 hover:bg-orange-700"
+            >
+              Cancel Submit
+            </button>
+          </div>
+        )}
       </div>
 
       <footer className="flex-shrink-0 text-center">
-        <button
-          type="button"
-          onClick={handleSubmit}
-          disabled={submitted}
-          className="w-1/2 py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-gray-400 disabled:cursor-not-allowed"
-        >
-          {submitted ? "Waiting for others..." : "Submit CSS"}
-        </button>
+        {!submitted ? (
+          <button
+            type="button"
+            onClick={handleSubmit}
+            className="w-1/2 py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            Submit CSS
+          </button>
+        ) : (
+          <div className="text-gray-600">Waiting for others... Tips are rotating above.</div>
+        )}
       </footer>
     </div>
       )}

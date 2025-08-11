@@ -28,6 +28,7 @@ interface GameContextType {
   joinRoom: (roomCode: string, name: string) => void;
   startGame: () => void;
   submitCss: () => void;
+  cancelSubmit: () => void;
   nextResultStep: () => void;
   returnToLobby: () => void;
 }
@@ -140,6 +141,11 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     });
   }, [socket, css]);
 
+  const cancelSubmit = useCallback(() => {
+    setSubmitted(false);
+    socket.emit("cancelSubmit");
+  }, [socket]);
+
   const nextResultStep = useCallback(() => {
     socket.emit("nextResultStep");
   }, [socket]);
@@ -162,6 +168,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     joinRoom,
     startGame,
     submitCss,
+    cancelSubmit,
     nextResultStep,
     returnToLobby,
   };
