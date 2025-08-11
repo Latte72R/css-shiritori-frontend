@@ -15,7 +15,7 @@ const WaitingRoom: React.FC = () => {
   const canStartGame = roomState.users.length >= 2;
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-8 border rounded-lg shadow-lg">
+    <div className="w-[95%] mx-auto mt-10 p-8 border rounded-lg shadow-lg">
       <h1 className="text-3xl font-bold text-center mb-4">Waiting Room</h1>
       <div className="text-center mb-6">
         <p className="text-lg">
@@ -25,27 +25,22 @@ const WaitingRoom: React.FC = () => {
           </span>
         </p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-        <div>
-          <h2 className="text-xl font-semibold mb-3">
-            Players ({roomState.users.length})
-          </h2>
-          <ul className="space-y-2 list-disc list-inside bg-gray-50 p-4 rounded-md">
-            {roomState.users.map((user) => (
-              <li key={user.id} className="text-gray-800">
-                {user.name}
-                {user.id === roomState.hostId && (
-                  <span className="ml-2 text-sm font-bold text-indigo-600">
-                    (Host)
-                  </span>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <TipRotator title="CSS TIPS (10秒ごとに更新)" />
-        </div>
+      <div>
+        <h2 className="text-xl font-semibold mb-3">
+          Players ({roomState.users.length})
+        </h2>
+        <ul className="space-y-2 list-disc list-inside bg-gray-50 p-4 rounded-md">
+          {roomState.users.map((user) => (
+            <li key={user.id} className="text-gray-800">
+              {user.name}
+              {user.id === roomState.hostId && (
+                <span className="ml-2 text-sm font-bold text-indigo-600">
+                  (Host)
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
       </div>
 
       {isHost && (
@@ -71,6 +66,10 @@ const WaitingRoom: React.FC = () => {
           Waiting for the host to start the game...
         </p>
       )}
+
+      <div className="mt-10">
+        <TipRotator title="CSS TIPS (15秒ごとに更新)" wide />
+      </div>
     </div>
   );
 };

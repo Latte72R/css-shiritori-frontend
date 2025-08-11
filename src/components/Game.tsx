@@ -102,8 +102,8 @@ const Game: React.FC = () => {
       </footer>
       {submitted && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl p-6">
-            <h3 className="text-2xl font-bold mb-4">CSS Tips (10秒ごとに更新)</h3>
+          <div className="bg-white rounded-lg shadow-xl w-[95%] p-6">
+            <h3 className="text-2xl font-bold mb-4">CSS Tips (15秒ごとに更新)</h3>
             <TipRotator title="" />
             <div className="mt-6 flex justify-end">
               <button

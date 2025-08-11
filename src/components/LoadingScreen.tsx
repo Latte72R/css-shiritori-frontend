@@ -10,6 +10,46 @@ export type RenderTip = {
 
 const CODE_BLOCK = (label: string, code: string) => `/* ${label} */\n${code}`;
 
+// Pretty-print helpers to make HTML/CSS easier to read
+const formatHtml = (src: string) => {
+  const s = src.replace(/></g, ">\n<").replace(/\n+/g, "\n").trim();
+  const lines = s.split("\n");
+  let indent = 0;
+  return lines
+    .map((line) => {
+      const trimmed = line.trim();
+      if (/^<\//.test(trimmed)) indent = Math.max(indent - 1, 0);
+      const pad = "  ".repeat(indent);
+      const out = pad + trimmed;
+      if (/^<[^/!][^>]*[^/]?>$/.test(trimmed) && !/^(<area|<br|<hr|<img|<input|<link|<meta)/i.test(trimmed)) {
+        indent += 1;
+      }
+      return out;
+    })
+    .join("\n");
+};
+
+const formatCss = (src: string) => {
+  const s = src
+    .replace(/\{/g, "{\n")
+    .replace(/;\s*/g, ";\n")
+    .replace(/}\s*/g, "\n}\n")
+    .replace(/\n+/g, "\n")
+    .trim();
+  const lines = s.split("\n");
+  let indent = 0;
+  return lines
+    .map((line) => {
+      const trimmed = line.trim();
+      if (trimmed === "}") indent = Math.max(indent - 1, 0);
+      const pad = "  ".repeat(indent);
+      const out = pad + trimmed;
+      if (trimmed.endsWith("{")) indent += 1;
+      return out;
+    })
+    .join("\n");
+};
+
 const tipSrcDoc = (tip: RenderTip) => `<!doctype html>
 <html>
   <head>
@@ -116,8 +156,8 @@ export const LoadingScreen: React.FC<{ title?: string } & React.HTMLAttributes<H
           <div className="text-base text-gray-500 mb-2">CSS TIP</div>
           <div className="text-2xl font-bold">{tip.title}</div>
           <p className="text-gray-700 mt-2 text-lg">{tip.description}</p>
-          <pre className="bg-gray-900 text-gray-100 text-base leading-relaxed p-4 rounded mt-4 whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("HTML", tip.html)}</code></pre>
-          <pre className="bg-gray-900 text-gray-100 text-base leading-relaxed p-4 rounded mt-4 whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("CSS", tip.css)}</code></pre>
+          <pre className="bg-gray-900 text-gray-100 text-base leading-relaxed p-4 rounded mt-4 whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("HTML", formatHtml(tip.html))}</code></pre>
+          <pre className="bg-gray-900 text-gray-100 text-base leading-relaxed p-4 rounded mt-4 whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("CSS", formatCss(tip.css))}</code></pre>
         </div>
         <div className="bg-white rounded-lg shadow p-3">
           <iframe title="Tip Preview" sandbox="allow-scripts" srcDoc={srcDoc} className="w-full h-96 border-0 rounded" />
@@ -158,7 +198,8 @@ export const TipRotator: React.FC<{
   intervalMs?: number;
   title?: string;
   className?: string;
-}> = ({ intervalMs = 10000, title = "CSS TIP", className = "" }) => {
+  wide?: boolean;
+}> = ({ intervalMs = 15000, title = "CSS TIP", className = "", wide = false }) => {
   const [index, setIndex] = useState(() => Math.floor(Math.random() * ALL_TIPS.length));
   useEffect(() => {
     const t = setInterval(() => setIndex((i) => (i + 1) % ALL_TIPS.length), intervalMs);
@@ -169,12 +210,12 @@ export const TipRotator: React.FC<{
   return (
     <div className={`w-full flex flex-col items-center ${className}`}>
       <div className="text-sm text-gray-500 mb-2">{title}</div>
-      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+      <div className={`w-full ${wide ? "max-w-none" : "max-w-5xl"} grid grid-cols-1 lg:grid-cols-2 gap-6 items-start`}>
         <div className="bg-white rounded-lg shadow p-6 text-left">
-          <div className="text-lg font-bold">{tip.title}</div>
+          <div className="text-2xl font-bold">{tip.title}</div>
           <p className="text-gray-700 mt-2 text-lg">{tip.description}</p>
-          <pre className="mt-4 bg-gray-900 text-gray-100 text-sm leading-relaxed p-4 rounded whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("HTML", tip.html)}</code></pre>
-          <pre className="mt-4 bg-gray-900 text-gray-100 text-sm leading-relaxed p-4 rounded whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("CSS", tip.css)}</code></pre>
+          <pre className="mt-4 bg-gray-900 text-gray-100 text-base leading-relaxed p-4 rounded whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("HTML", formatHtml(tip.html))}</code></pre>
+          <pre className="mt-4 bg-gray-900 text-gray-100 text-base leading-relaxed p-4 rounded whitespace-pre-wrap break-words overflow-visible"><code>{CODE_BLOCK("CSS", formatCss(tip.css))}</code></pre>
         </div>
         <div className="bg-white rounded-lg shadow p-3">
           <iframe title="Tip Preview" sandbox="allow-scripts" srcDoc={srcDoc} className="w-full h-96 border-0 rounded" />
