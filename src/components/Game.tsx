@@ -4,8 +4,16 @@ import { BACKEND_URL } from "../contexts/SocketContext";
 import { LoadingGate, TipRotator } from "./LoadingScreen";
 
 const Game: React.FC = () => {
-  const { prompt, css, submitted, setCss, submitCss, cancelSubmit, timer, currentTurn } =
-    useGame();
+  const {
+    prompt,
+    css,
+    submitted,
+    setCss,
+    submitCss,
+    cancelSubmit,
+    timer,
+    currentTurn,
+  } = useGame();
 
   const srcDoc = prompt
     ? `
@@ -23,101 +31,105 @@ const Game: React.FC = () => {
   return (
     <LoadingGate ready={Boolean(prompt)} title="Loading game...">
       {!prompt ? null : (
-    <div className="h-screen w-screen flex flex-col p-4 gap-4 bg-gray-100">
-      <header className="flex-shrink-0 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Replicate the Target!</h1>
-        <div className="text-right">
-          {currentTurn && (
-            <div className="text-lg font-semibold">
-              Turn: {currentTurn.number} / {currentTurn.total}
+        <div className="h-screen w-screen flex flex-col p-4 gap-4 bg-gray-100">
+          <header className="flex-shrink-0 flex justify-between items-center">
+            <h1 className="text-2xl font-bold">Replicate the Target!</h1>
+            <div className="text-right">
+              {currentTurn && (
+                <div className="text-lg font-semibold">
+                  Turn: {currentTurn.number} / {currentTurn.total}
+                </div>
+              )}
+              {timer !== null && (
+                <div className="text-xl font-mono bg-red-500 text-white px-3 py-1 rounded">
+                  Time: {timer}s
+                </div>
+              )}
             </div>
-          )}
-          {timer !== null && (
-            <div className="text-xl font-mono bg-red-500 text-white px-3 py-1 rounded">
-              Time: {timer}s
+          </header>
+
+          <div className="flex-grow grid grid-cols-2 grid-rows-2 gap-4">
+            {/* Target Image */}
+            <div className="bg-white rounded-lg shadow p-4 flex flex-col">
+              <h2 className="text-lg font-semibold mb-2">Target</h2>
+              <div className="flex-grow flex items-center justify-center bg-gray-200 rounded">
+                <img
+                  src={`${BACKEND_URL}${prompt.targetImageUrl}`}
+                  alt="Target screenshot"
+                  className="max-w-full max-h-full object-contain"
+                />
+              </div>
             </div>
-          )}
-        </div>
-      </header>
 
-      <div className="flex-grow grid grid-cols-2 grid-rows-2 gap-4">
-        {/* Target Image */}
-        <div className="bg-white rounded-lg shadow p-4 flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Target</h2>
-          <div className="flex-grow flex items-center justify-center bg-gray-200 rounded">
-            <img
-              src={`${BACKEND_URL}${prompt.targetImageUrl}`}
-              alt="Target screenshot"
-              className="max-w-full max-h-full object-contain"
-            />
+            {/* Live Preview */}
+            <div className="bg-white rounded-lg shadow p-4 flex flex-col">
+              <h2 className="text-lg font-semibold mb-2">Your Preview</h2>
+              <div className="flex-grow bg-gray-200 rounded">
+                <iframe
+                  srcDoc={srcDoc}
+                  title="Live Preview"
+                  sandbox="allow-scripts"
+                  className="w-full h-full border-0"
+                />
+              </div>
+            </div>
+
+            {/* HTML (Read-only) */}
+            <div className="bg-white rounded-lg shadow p-4 flex flex-col">
+              <h2 className="text-lg font-semibold mb-2">HTML</h2>
+              <pre className="flex-grow bg-gray-800 text-white p-3 rounded-md overflow-auto text-sm">
+                <code>{prompt.html}</code>
+              </pre>
+            </div>
+
+            {/* CSS Editor */}
+            <div className="bg-white rounded-lg shadow p-4 flex flex-col">
+              <h2 className="text-lg font-semibold mb-2">Your CSS</h2>
+              <textarea
+                value={css}
+                onChange={(e) => setCss(e.target.value)}
+                className="flex-grow w-full p-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-indigo-500"
+                placeholder="body { background-color: #...; }"
+                disabled={submitted}
+              />
+            </div>
           </div>
-        </div>
 
-        {/* Live Preview */}
-        <div className="bg-white rounded-lg shadow p-4 flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Your Preview</h2>
-          <div className="flex-grow bg-gray-200 rounded">
-            <iframe
-              srcDoc={srcDoc}
-              title="Live Preview"
-              sandbox="allow-scripts"
-              className="w-full h-full border-0"
-            />
-          </div>
-        </div>
-
-        {/* HTML (Read-only) */}
-        <div className="bg-white rounded-lg shadow p-4 flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">HTML</h2>
-          <pre className="flex-grow bg-gray-800 text-white p-3 rounded-md overflow-auto text-sm">
-            <code>{prompt.html}</code>
-          </pre>
-        </div>
-
-        {/* CSS Editor */}
-        <div className="bg-white rounded-lg shadow p-4 flex flex-col">
-          <h2 className="text-lg font-semibold mb-2">Your CSS</h2>
-          <textarea
-            value={css}
-            onChange={(e) => setCss(e.target.value)}
-            className="flex-grow w-full p-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-indigo-500"
-            placeholder="body { background-color: #...; }"
-            disabled={submitted}
-          />
-        </div>
-      </div>
-
-      <footer className="flex-shrink-0 text-center">
-        {!submitted ? (
-          <button
-            type="button"
-            onClick={handleSubmit}
-            className="w-1/2 py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-          >
-            Submit CSS
-          </button>
-        ) : (
-          <div className="text-gray-600">Waiting for others... Tips are shown.</div>
-        )}
-      </footer>
-      {submitted && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="bg-white rounded-lg shadow-xl w-[95%] p-6">
-            <h3 className="text-2xl font-bold mb-4">CSS Tips (15秒ごとに更新)</h3>
-            <TipRotator title="" />
-            <div className="mt-6 flex justify-end">
+          <footer className="flex-shrink-0 text-center">
+            {!submitted ? (
               <button
                 type="button"
-                onClick={cancelSubmit}
-                className="py-2 px-4 rounded-md text-white bg-orange-600 hover:bg-orange-700"
+                onClick={handleSubmit}
+                className="w-1/2 py-3 px-6 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Cancel Submit
+                Submit CSS
               </button>
+            ) : (
+              <div className="text-gray-600">
+                Waiting for others... Tips are shown.
+              </div>
+            )}
+          </footer>
+          {submitted && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+              <div className="bg-white rounded-lg shadow-xl w-[95%] p-6">
+                <h3 className="text-2xl font-bold mb-4">
+                  CSS Tips (15秒ごとに更新)
+                </h3>
+                <TipRotator title="" />
+                <div className="mt-6 flex justify-end">
+                  <button
+                    type="button"
+                    onClick={cancelSubmit}
+                    className="py-2 px-4 rounded-md text-white bg-orange-600 hover:bg-orange-700"
+                  >
+                    Cancel Submit
+                  </button>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
-    </div>
       )}
     </LoadingGate>
   );

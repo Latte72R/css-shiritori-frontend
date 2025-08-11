@@ -12,7 +12,10 @@ const Results: React.FC = () => {
   const [showAll, setShowAll] = useState(false);
 
   return (
-    <LoadingGate ready={Boolean(results && shownResultStep)} title="Loading results...">
+    <LoadingGate
+      ready={Boolean(results && shownResultStep)}
+      title="Loading results..."
+    >
       {/* Guard: Only rendered when ready, but keep runtime check */}
       {!results || !shownResultStep ? null : (
         <div className="max-w-6xl mx-auto mt-10 p-8">
@@ -23,37 +26,37 @@ const Results: React.FC = () => {
               shownResultStep.stepIndex >=
                 results.chains[results.chains.length - 1].steps.length - 1;
             return (
-            <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
-              <h1 className="text-4xl font-bold">Game Results</h1>
-              <div className="flex gap-3 flex-wrap">
-                <button
-                  type="button"
-                  onClick={() => setShowAll((v) => !v)}
-                  className={`py-2 px-5 border border-transparent rounded-md shadow-sm text-lg font-medium text-white ${showAll ? "bg-gray-600 hover:bg-gray-700" : "bg-green-600 hover:bg-green-700"}`}
-                >
-                  {showAll ? "Hide Unshown" : "Show All"}
-                </button>
-                {isHost && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={nextResultStep}
-                      disabled={allStepsShown}
-                      className="py-2 px-5 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
-                    >
-                      Next Step
-                    </button>
-                    <button
-                      type="button"
-                      onClick={returnToLobby}
-                      className="py-2 px-5 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                    >
-                      Return to Lobby
-                    </button>
-                  </>
-                )}
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-8">
+                <h1 className="text-4xl font-bold">Game Results</h1>
+                <div className="flex gap-3 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => setShowAll((v) => !v)}
+                    className={`py-2 px-5 border border-transparent rounded-md shadow-sm text-lg font-medium text-white ${showAll ? "bg-gray-600 hover:bg-gray-700" : "bg-green-600 hover:bg-green-700"}`}
+                  >
+                    {showAll ? "Hide Unshown" : "Show All"}
+                  </button>
+                  {isHost && (
+                    <>
+                      <button
+                        type="button"
+                        onClick={nextResultStep}
+                        disabled={allStepsShown}
+                        className="py-2 px-5 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400"
+                      >
+                        Next Step
+                      </button>
+                      <button
+                        type="button"
+                        onClick={returnToLobby}
+                        className="py-2 px-5 border border-transparent rounded-md shadow-sm text-lg font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      >
+                        Return to Lobby
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
             );
           })()}
 
@@ -64,7 +67,9 @@ const Results: React.FC = () => {
                 key={chainIndex}
                 className="p-6 border rounded-lg shadow-md bg-white"
               >
-                <h2 className="text-2xl font-bold mb-4">Chain {chainIndex + 1}</h2>
+                <h2 className="text-2xl font-bold mb-4">
+                  Chain {chainIndex + 1}
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Initial Prompt */}
                   <div className="border-2 border-dashed border-gray-400 p-4 rounded-lg">
@@ -86,18 +91,18 @@ const Results: React.FC = () => {
                         <code>{chain.initialPrompt.html}</code>
                       </pre>
                     </details>
-                    </div>
-                    {chain.initialPrompt.css && (
-                      <details className="mt-3">
-                        <summary className="cursor-pointer text-sm font-medium text-gray-600">
-                          Show Initial CSS
-                        </summary>
-                        <pre className="mt-1 bg-gray-800 text-white p-2 rounded-md overflow-auto text-xs">
-                          <code>{chain.initialPrompt.css}</code>
-                        </pre>
-                      </details>
-                    )}
-                  
+                  </div>
+                  {chain.initialPrompt.css && (
+                    <details className="mt-3">
+                      <summary className="cursor-pointer text-sm font-medium text-gray-600">
+                        Show Initial CSS
+                      </summary>
+                      <pre className="mt-1 bg-gray-800 text-white p-2 rounded-md overflow-auto text-xs">
+                        <code>{chain.initialPrompt.css}</code>
+                      </pre>
+                    </details>
+                  )}
+
                   {/* Steps */}
                   {chain.steps.map((step, stepIndex) => {
                     const isVisible = showAll
