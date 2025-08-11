@@ -111,7 +111,7 @@ export const LoadingScreen: React.FC<{ title?: string } & React.HTMLAttributes<H
   return (
     <div className={`min-h-[60vh] flex flex-col items-center justify-center text-center p-6 ${className}`}>
       <div className="animate-pulse text-3xl font-extrabold mb-6">{title ?? "Loading..."}</div>
-      <div className="w-full max-w-3xl flex flex-col gap-6 items-stretch">
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <div className="bg-white rounded-lg shadow p-6 text-left">
           <div className="text-base text-gray-500 mb-2">CSS TIP</div>
           <div className="text-2xl font-bold">{tip.title}</div>
@@ -169,7 +169,7 @@ export const TipRotator: React.FC<{
   return (
     <div className={`w-full flex flex-col items-center ${className}`}>
       <div className="text-sm text-gray-500 mb-2">{title}</div>
-      <div className="w-full max-w-3xl flex flex-col gap-6 items-stretch">
+      <div className="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
         <div className="bg-white rounded-lg shadow p-6 text-left">
           <div className="text-lg font-bold">{tip.title}</div>
           <p className="text-gray-700 mt-2 text-lg">{tip.description}</p>

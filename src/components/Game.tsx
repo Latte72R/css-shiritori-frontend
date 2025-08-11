@@ -74,30 +74,17 @@ const Game: React.FC = () => {
           </pre>
         </div>
 
-        {/* CSS Editor or Post-submit Tips */}
-        {!submitted ? (
-          <div className="bg-white rounded-lg shadow p-4 flex flex-col">
-            <h2 className="text-lg font-semibold mb-2">Your CSS</h2>
-            <textarea
-              value={css}
-              onChange={(e) => setCss(e.target.value)}
-              className="flex-grow w-full p-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-indigo-500"
-              placeholder="body { background-color: #...; }"
-            />
-          </div>
-        ) : (
-          <div className="bg-white rounded-lg shadow p-4 flex flex-col items-stretch">
-            <h2 className="text-lg font-semibold mb-2">Submitted — Tips</h2>
-            <TipRotator title="CSS TIPS (10秒ごとに更新)" />
-            <button
-              type="button"
-              onClick={cancelSubmit}
-              className="mt-4 py-2 px-4 rounded-md text-white bg-orange-600 hover:bg-orange-700"
-            >
-              Cancel Submit
-            </button>
-          </div>
-        )}
+        {/* CSS Editor */}
+        <div className="bg-white rounded-lg shadow p-4 flex flex-col">
+          <h2 className="text-lg font-semibold mb-2">Your CSS</h2>
+          <textarea
+            value={css}
+            onChange={(e) => setCss(e.target.value)}
+            className="flex-grow w-full p-2 border border-gray-300 rounded-md font-mono text-sm focus:ring-2 focus:ring-indigo-500"
+            placeholder="body { background-color: #...; }"
+            disabled={submitted}
+          />
+        </div>
       </div>
 
       <footer className="flex-shrink-0 text-center">
@@ -110,9 +97,26 @@ const Game: React.FC = () => {
             Submit CSS
           </button>
         ) : (
-          <div className="text-gray-600">Waiting for others... Tips are rotating above.</div>
+          <div className="text-gray-600">Waiting for others... Tips are shown.</div>
         )}
       </footer>
+      {submitted && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl p-6">
+            <h3 className="text-2xl font-bold mb-4">CSS Tips (10秒ごとに更新)</h3>
+            <TipRotator title="" />
+            <div className="mt-6 flex justify-end">
+              <button
+                type="button"
+                onClick={cancelSubmit}
+                className="py-2 px-4 rounded-md text-white bg-orange-600 hover:bg-orange-700"
+              >
+                Cancel Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
       )}
     </LoadingGate>
