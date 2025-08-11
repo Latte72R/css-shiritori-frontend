@@ -44,7 +44,7 @@ const WaitingRoom: React.FC = () => {
           </ul>
         </div>
         <div>
-          <TipRotator title="CSS TIPS (5秒ごとに更新)" />
+          <TipRotator title="CSS TIPS (10秒ごとに更新)" />
         </div>
       </div>
 

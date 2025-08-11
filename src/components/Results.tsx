@@ -86,8 +86,18 @@ const Results: React.FC = () => {
                         <code>{chain.initialPrompt.html}</code>
                       </pre>
                     </details>
-                  </div>
-
+                    </div>
+                    {chain.initialPrompt.css && (
+                      <details className="mt-3">
+                        <summary className="cursor-pointer text-sm font-medium text-gray-600">
+                          Show Initial CSS
+                        </summary>
+                        <pre className="mt-1 bg-gray-800 text-white p-2 rounded-md overflow-auto text-xs">
+                          <code>{chain.initialPrompt.css}</code>
+                        </pre>
+                      </details>
+                    )}
+                  
                   {/* Steps */}
                   {chain.steps.map((step, stepIndex) => {
                     const isVisible = showAll

@@ -41,6 +41,7 @@ export type RoomState = z.infer<typeof RoomStateSchema>;
 export const PromptSchema = z.object({
   html: z.string(), // プレイヤーがスタイリングする対象のHTML
   targetImageUrl: z.string(), // 目標となるスクリーンショットのURL
+  css: z.string().optional(), // 初期CSS（存在すれば表示用）
 });
 export type Prompt = z.infer<typeof PromptSchema>;
 

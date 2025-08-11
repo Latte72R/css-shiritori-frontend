@@ -88,7 +88,7 @@ const Game: React.FC = () => {
         ) : (
           <div className="bg-white rounded-lg shadow p-4 flex flex-col items-stretch">
             <h2 className="text-lg font-semibold mb-2">Submitted — Tips</h2>
-            <TipRotator title="CSS TIPS (5秒ごとに更新)" />
+            <TipRotator title="CSS TIPS (10秒ごとに更新)" />
             <button
               type="button"
               onClick={cancelSubmit}
