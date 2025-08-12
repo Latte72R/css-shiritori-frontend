@@ -31,7 +31,8 @@ const Game: React.FC = () => {
   return (
     <LoadingGate ready={Boolean(prompt)} title="Loading game...">
       {!prompt ? null : (
-        <div className="h-screen w-screen flex flex-col p-4 gap-4 bg-gray-100">
+        /* <div className="h-screen w-screen flex flex-col p-4 gap-4 bg-gray-100"> */
+        <div className="min-h-screen w-full flex flex-col p-4 gap-4 bg-gray-100">
           <header className="flex-shrink-0 flex justify-between items-center">
             <h1 className="text-2xl font-bold">Replicate the Target!</h1>
             <div className="text-right">
@@ -130,8 +131,9 @@ const Game: React.FC = () => {
             </div>
           )}
         </div>
-      )}
-    </LoadingGate>
+      )
+      }
+    </LoadingGate >
   );
 };
 
