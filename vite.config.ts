@@ -8,4 +8,3 @@ export default defineConfig(({ command }) => ({
   base: command === "build" ? "/css-shiritori-frontend/" : "/",
   plugins: [react(), tailwindcss()],
 }));
-
