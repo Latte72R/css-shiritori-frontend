@@ -62,6 +62,26 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
   const [css, setCss] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
 
+  const submitCss = useCallback(() => {
+    setSubmitted(true); // 送信成功時に状態を更新
+    socket.emit("submitCss", { css }, (response) => {
+      if (!response.success) {
+        setLastError(response.message);
+        setSubmitted(false); // 送信失敗時は再送可能にする
+      }
+    });
+  }, [socket, css]);
+
+  const handleTimerUpdate = useCallback(
+    (newTimer: number) => {
+      if (newTimer < 2) {
+        submitCss();
+      }
+      setTimer(newTimer - 2);
+    },
+    [submitCss],
+  );
+
   useEffect(() => {
     // Listen for server events
     socket.on("updateRoomState", setRoomState);
@@ -79,7 +99,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       setCss("");
       setSubmitted(false);
     });
-    socket.on("timerUpdate", setTimer);
+    socket.on("timerUpdate", handleTimerUpdate);
     socket.on("gameFinished", (results) => {
       setResults(results);
       setShownResultStep({ chainIndex: 0, stepIndex: -1 }); // Initialize for viewing
@@ -105,7 +125,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       socket.off("lobbyReset");
       socket.off("error");
     };
-  }, [socket, roomState?.users.length]);
+  }, [socket, roomState?.users.length, handleTimerUpdate]);
 
   const joinRoom = useCallback(
     (roomCode: string, name: string) => {
@@ -130,16 +150,6 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     });
   }, [socket]);
-
-  const submitCss = useCallback(() => {
-    setSubmitted(true); // 送信成功時に状態を更新
-    socket.emit("submitCss", { css }, (response) => {
-      if (!response.success) {
-        setLastError(response.message);
-        setSubmitted(false); // 送信失敗時は再送可能にする
-      }
-    });
-  }, [socket, css]);
 
   const cancelSubmit = useCallback(() => {
     setSubmitted(false);
