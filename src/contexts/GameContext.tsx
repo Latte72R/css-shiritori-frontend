@@ -11,6 +11,7 @@ import type {
   Prompt,
   RoomState,
   ShowResultStepPayload,
+  UpdateTimerSettingsPayload,
 } from "../common/events";
 import { useSocket } from "./SocketContext";
 
@@ -24,6 +25,7 @@ interface GameContextType {
   shownResultStep: ShowResultStepPayload | null;
   css: string;
   submitted: boolean;
+  timerSettings: UpdateTimerSettingsPayload | null;
   setCss: React.Dispatch<React.SetStateAction<string>>;
   joinRoom: (roomCode: string, name: string) => void;
   startGame: () => void;
@@ -31,6 +33,7 @@ interface GameContextType {
   cancelSubmit: () => void;
   nextResultStep: () => void;
   returnToLobby: () => void;
+  updateTimerSettings: (durationSeconds: number) => void;
 }
 
 const GameContext = createContext<GameContextType | null>(null);
@@ -61,6 +64,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [css, setCss] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
+  const [timerSettings, setTimerSettings] =
+    useState<UpdateTimerSettingsPayload | null>(null);
 
   const submitCss = useCallback(() => {
     setSubmitted(true); // 送信成功時に状態を更新
@@ -113,6 +118,9 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       setCss("");
       setSubmitted(false);
     });
+    socket.on("timerSettingsUpdated", (payload) => {
+      setTimerSettings(payload);
+    });
     socket.on("error", ({ message }) => setLastError(message));
 
     return () => {
@@ -123,6 +131,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
       socket.off("timerUpdate");
       socket.off("gameFinished");
       socket.off("lobbyReset");
+      socket.off("timerSettingsUpdated");
       socket.off("error");
     };
   }, [socket, roomState?.users.length, handleTimerUpdate]);
@@ -164,6 +173,17 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.emit("returnToLobby");
   }, [socket]);
 
+  const updateTimerSettings = useCallback(
+    (durationSeconds: number) => {
+      socket.emit("updateTimerSettings", { durationSeconds }, (response) => {
+        if (!response.success) {
+          setLastError(response.message || "Failed to update timer settings.");
+        }
+      });
+    },
+    [socket],
+  );
+
   const value = {
     roomState,
     prompt,
@@ -174,6 +194,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     shownResultStep,
     css,
     submitted,
+    timerSettings,
     setCss,
     joinRoom,
     startGame,
@@ -181,6 +202,7 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     cancelSubmit,
     nextResultStep,
     returnToLobby,
+    updateTimerSettings,
   };
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>;

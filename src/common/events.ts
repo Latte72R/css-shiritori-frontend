@@ -90,6 +90,16 @@ export const ShowResultStepSchema = z.object({
 });
 export type ShowResultStepPayload = z.infer<typeof ShowResultStepSchema>;
 
+/**
+ * タイマー設定を更新する際のペイロードスキーマ
+ */
+export const UpdateTimerSettingsSchema = z.object({
+  durationSeconds: z.number().int().min(20), // 20秒以上
+});
+export type UpdateTimerSettingsPayload = z.infer<
+  typeof UpdateTimerSettingsSchema
+>;
+
 // ====================================================================================
 //  2. サーバー -> クライアント のイベント定義 (Server to Client Events)
 // サーバーがクライアントに送信する可能性のあるすべてのイベントを定義します。
@@ -133,6 +143,11 @@ export interface ServerToClientEvents {
    * 結果鑑賞がすべて終わり、ロビー（待機画面）に戻ることを指示します。
    */
   lobbyReset: () => void;
+
+  /**
+   * タイマー設定が更新されたことを全クライアントに通知します。
+   */
+  timerSettingsUpdated: (payload: UpdateTimerSettingsPayload) => void;
 
   /**
    * 何らかのエラーが発生したことをクライアントに通知します。
@@ -193,4 +208,12 @@ export interface ClientToServerEvents {
    * 結果鑑賞が終わり、ホストが「ロビーに戻る」を選択したことをサーバーに通知します。
    */
   returnToLobby: () => void;
+
+  /**
+   * ホストがタイマー設定を更新することをサーバーに通知します。
+   */
+  updateTimerSettings: (
+    payload: UpdateTimerSettingsPayload,
+    ack: (response: { success: boolean; message?: string }) => void,
+  ) => void;
 }
