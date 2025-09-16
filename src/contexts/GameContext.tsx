@@ -64,7 +64,8 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const [css, setCss] = useState<string>("");
   const [submitted, setSubmitted] = useState<boolean>(false);
-  const [timerSettings, setTimerSettings] = useState<UpdateTimerSettingsPayload | null>(null);
+  const [timerSettings, setTimerSettings] =
+    useState<UpdateTimerSettingsPayload | null>(null);
 
   const submitCss = useCallback(() => {
     setSubmitted(true); // 送信成功時に状態を更新
@@ -172,13 +173,16 @@ export const GameProvider: React.FC<{ children: React.ReactNode }> = ({
     socket.emit("returnToLobby");
   }, [socket]);
 
-  const updateTimerSettings = useCallback((durationSeconds: number) => {
-    socket.emit("updateTimerSettings", { durationSeconds }, (response) => {
-      if (!response.success) {
-        setLastError(response.message || "Failed to update timer settings.");
-      }
-    });
-  }, [socket]);
+  const updateTimerSettings = useCallback(
+    (durationSeconds: number) => {
+      socket.emit("updateTimerSettings", { durationSeconds }, (response) => {
+        if (!response.success) {
+          setLastError(response.message || "Failed to update timer settings.");
+        }
+      });
+    },
+    [socket],
+  );
 
   const value = {
     roomState,

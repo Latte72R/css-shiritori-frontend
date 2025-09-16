@@ -5,7 +5,8 @@ import { useSocket } from "../contexts/SocketContext";
 import { TipRotator } from "./LoadingScreen";
 
 const WaitingRoom: React.FC = () => {
-  const { roomState, startGame, timerSettings, updateTimerSettings } = useGame();
+  const { roomState, startGame, timerSettings, updateTimerSettings } =
+    useGame();
   const socket = useSocket();
   const [showTimerSettings, setShowTimerSettings] = useState(false);
   const [timerDuration, setTimerDuration] = useState(300);
@@ -74,7 +75,10 @@ const WaitingRoom: React.FC = () => {
               <h3 className="text-lg font-medium mb-3">タイマー設定</h3>
               <form onSubmit={handleTimerSettingsSubmit} className="space-y-4">
                 <div>
-                  <label htmlFor="timerDuration" className="block text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="timerDuration"
+                    className="block text-sm font-medium text-gray-700"
+                  >
                     制限時間（秒）
                   </label>
                   <input

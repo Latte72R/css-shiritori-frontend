@@ -96,7 +96,9 @@ export type ShowResultStepPayload = z.infer<typeof ShowResultStepSchema>;
 export const UpdateTimerSettingsSchema = z.object({
   durationSeconds: z.number().int().min(20), // 20秒以上
 });
-export type UpdateTimerSettingsPayload = z.infer<typeof UpdateTimerSettingsSchema>;
+export type UpdateTimerSettingsPayload = z.infer<
+  typeof UpdateTimerSettingsSchema
+>;
 
 // ====================================================================================
 //  2. サーバー -> クライアント のイベント定義 (Server to Client Events)
@@ -215,5 +217,3 @@ export interface ClientToServerEvents {
     ack: (response: { success: boolean; message?: string }) => void,
   ) => void;
 }
-
-
